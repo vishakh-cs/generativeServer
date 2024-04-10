@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            position: relative;
+            height: 100px;
+            background-color: #3498db;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            overflow: hidden;
+        }
+
+        .polygon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #3498db, #e74c3c);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 0% 100%);
+        }
+
+        .title {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="polygon"></div>
+            <div class="title">Invitation to Collaborate</div>
+        </div>
+        <div class="content">
+            <p>Hello there!</p>
+            <p>You have been invited to collaborate on <strong>{workspaceName}</strong> workspace. Click the button below
+                to accept the invitation.</p>
+            <a href="{addCollabLink}" class="button" style="color: #f2f2f2;">Accept Invitation</a>
+            <p>If the button above doesn't work, you can also copy and paste the following link into your
+                browser:</p>
+            <p><a href="{addCollabLink}">Your Invitation Link</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
