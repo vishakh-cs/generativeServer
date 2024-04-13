@@ -7,6 +7,8 @@ var logger = require('morgan');
 require('dotenv').config();
 const { Server } = require("socket.io");
 const cors = require('cors');
+const CLIENT__URL = process.env.CLIENT_URL
+console.log("process.env.CLIENT_URL",process.env.CLIENT_URL);
 
 // const server = http.createServer(app);
 
@@ -52,7 +54,7 @@ const ioMiddleware=(io)=>{
 const server = http.createServer(app);
 const io =new Server(server,{
   cors:{
-    origin:"http://localhost:3000",
+    origin:CLIENT__URL,
     methods:["GET","POST"],
   },
 });
@@ -66,7 +68,7 @@ io.on('connection', (socket) => {
 
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: CLIENT__URL,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
