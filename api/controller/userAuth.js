@@ -432,6 +432,90 @@ const setProfileUrl=async(req,res)=>{
   }
 };
 
+
+const ForgotPasswordEmailVerify=async(req,res)=>{
+  const {email} = req.body;
+     const user = await UserModel.findOne({ email });
+ if (!user) {
+  return res.status(404).json({ success: false, message: 'User not found' });
+}
+  const verificationCode = Math.floor(1000 + Math.random() * 9000);
+
+  const emailTemplatePath = path.join(__dirname, '../public/ForgotPasswordVerification/forgotPass.html');
+  const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
+  const emailContent = emailTemplate.replace(/{email}/g, email).replace(/{verificationCode}/g, verificationCode);
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.APP_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  const mailOptions = {
+    from: "Generative",
+    to: email,
+    subject: 'Forgot password Email Verification',
+    html: emailContent,
+  };
+
+  transporter.sendMail(mailOptions, async (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent:', info.response);
+      res.status(200).json({
+        success: true,
+        message: 'Email sent successfully',
+        verificationCode: verificationCode  
+      });
+    }
+  });
+};
+
+const verifyForgotOtp = async (req, res) => {
+  try {
+    // Extract the OTP from the request
+    const { otp, email, verificationCode } = req.body;
+  console.log("req.bodyreq.body",req.body);
+    if (!otp || !verificationCode) {
+      return res.status(400).json({ success: false, message: 'OTP and verification code are required' });
+    }
+
+    if (otp === verificationCode) {
+      return res.status(200).json({ success: true, message: 'OTP verified successfully' });
+    } else {
+      return res.status(400).json({ success: false, message: 'Invalid OTP' });
+    }
+  } catch (error) {
+    console.error('Error in verifyForgotOtp:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+const forgotResetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const user = await UserModel.findOneAndUpdate({ email }, { password: hashedPassword });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    return res.status(200).json({ success: true, message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Error resetting password:', error.message);
+    return res.status(500).json({ success: false, message: 'Error resetting password' });
+  }
+};
+
+ 
+
+
 module.exports = {
   signUp,
   Login,
@@ -441,5 +525,7 @@ module.exports = {
   createNewWorkSpace,
   checkWorkspace,
   setProfileUrl,
-  
+  ForgotPasswordEmailVerify,
+  verifyForgotOtp,
+  forgotResetPassword,
 };

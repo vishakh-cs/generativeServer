@@ -23,6 +23,12 @@ router.get('/verify',userAuth.verifyEmail);
 
 router.post('/setProfileImageUrl',userAuth.setProfileUrl);
 
+router.post('/forgotpassword',userAuth.ForgotPasswordEmailVerify);
+
+router.post('/verifyforgototp',userAuth.verifyForgotOtp);
+
+router.post('/forgotresetpassword',userAuth.forgotResetPassword);
+
 
 
 
