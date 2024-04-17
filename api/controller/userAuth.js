@@ -203,6 +203,8 @@ const Login = async (req, res) => {
       maxAge: 60 * 60 * 1000,
       sameSite: 'strict',
     });
+
+    const workspace = await Workspace.findOne({ owner: user._id });
     const responseData = {
       success: true,
       message: 'Login successful.',
@@ -211,11 +213,12 @@ const Login = async (req, res) => {
         username: user.username,
         email: user.email,
         hasWorkspace,
+        workspaceId:workspace._id,
       },
       token: token,
     };
     if (hasWorkspace) {
-      const workspace = await Workspace.findOne({ owner: user._id });
+    
       responseData.redirectUrl = `/home/${user._id}/${workspace._id}`;
     }
 
