@@ -25,6 +25,17 @@ jobs:
       - name: Delete old container
         run: docker rm -f generative-container
       - name: Run docker container
-        run: docker run -d -p 8000:8000 --name generative-container vishakhappu/generative-server
+        run: |
+          docker run -d -p 8000:8000 --name generative-container \
+          -e MONGODBURL='${{ secrets.MONGODBURL }}' \
+          -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+          -e NODE_ENV='${{ secrets.NODE_ENV }}' \
+          -e BASE_URL='${{ secrets.BASE_URL }}' \
+          -e CLIENT_URL='${{ secrets.CLIENT_URL }}' \
+          -e EMAIL_USER='${{ secrets.EMAIL_USER }}' \
+          -e APP_PASSWORD='${{ secrets.APP_PASSWORD }}' \
+          vishakhappu/generative-server
+             
+
 
         
