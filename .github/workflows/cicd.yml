@@ -25,6 +25,6 @@ jobs:
       - name: Delete old container
         run: docker rm -f generative-container
       - name: Run docker container
-        run: docker run -d -p 8000:8000 --name generative-container generative-server
+        run: docker run -d -p 8000:8000 --name generative-container vishakhappu/generative-server
 
         
