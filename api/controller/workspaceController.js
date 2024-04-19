@@ -286,6 +286,11 @@ const sendEmailInvite = async (req, res) => {
   const { userEmail, workspaceId } = req.body;
 
   try {
+    const user = await UserModel.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    const userId = user._id;
     // Fetch workspace name from the workspace database
     const workspace = await Workspace.findById(workspaceId);
     if (!workspace) {
@@ -327,6 +332,8 @@ const sendEmailInvite = async (req, res) => {
         });
       } else {
         console.log('Email sent:', info.response);
+        const io=req.io
+        io.emit("EmailSent", { userId });
         return res.status(200).json({
           success: true,
           message: 'Invitation email sent successfully.',
@@ -693,8 +700,6 @@ const getOtherCollabUsers = async (req, res) => {
 const leaveCollaboration = async (req, res) => {
   try {
     const { workspaceId, userId } = req.body;
-
-    console.log("req.body", req.body);
     const workspace = await Workspace.findById(workspaceId);
     if (!workspace) {
       return res.status(404).json({ error: 'Workspace not found' });
@@ -704,8 +709,9 @@ const leaveCollaboration = async (req, res) => {
       return res.status(400).json({ error: 'User is not a collaborator in the workspace' });
     }
     workspace.collaborators.splice(collaboratorIndex, 1);
-
     await workspace.save();
+    const io=req.io
+    io.emit("collabLeaved");
 
     return res.status(200).json({ message: 'Left collaboration successfully' });
   } catch (error) {
