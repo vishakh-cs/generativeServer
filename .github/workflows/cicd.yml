@@ -34,7 +34,7 @@ jobs:
           -e CLIENT_URL='${{ secrets.CLIENT_URL }}' \
           -e EMAIL_USER='${{ secrets.EMAIL_USER }}' \
           -e APP_PASSWORD='${{ secrets.APP_PASSWORD }}' \
-          vishakhappu/generative-server
+          vishakhappu/generative-server 
              
 
 
