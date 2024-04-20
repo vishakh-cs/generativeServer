@@ -140,7 +140,6 @@ const verifyEmail = async (req, res) => {
 
         return res.redirect(302, '../EmailVerify/redirectpage/redirectPage.html');
       } else {
-        // Send JSON response
         return res.status(200).json({
           success: true,
           data: {
