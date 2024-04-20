@@ -332,8 +332,6 @@ const sendEmailInvite = async (req, res) => {
         });
       } else {
         console.log('Email sent:', info.response);
-        const io=req.io
-        io.emit("EmailSent", { userId });
         return res.status(200).json({
           success: true,
           message: 'Invitation email sent successfully.',
