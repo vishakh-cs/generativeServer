@@ -196,6 +196,14 @@ const Login = async (req, res) => {
     const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     const hasWorkspace = user.have_workspace;
+    let workspaceId = null;
+
+    if (hasWorkspace) {
+      const workspace = await Workspace.findOne({ owner: user._id });
+      if (workspace) {
+        workspaceId = workspace._id;
+      }
+    }
 
     res.cookie('token', token, {
       httpOnly: true,
@@ -204,7 +212,6 @@ const Login = async (req, res) => {
       sameSite: 'strict',
     });
 
-    const workspace = await Workspace.findOne({ owner: user._id });
     const responseData = {
       success: true,
       message: 'Login successful.',
@@ -213,13 +220,13 @@ const Login = async (req, res) => {
         username: user.username,
         email: user.email,
         hasWorkspace,
-        workspaceId:workspace._id,
+        workspaceId,
       },
       token: token,
     };
+
     if (hasWorkspace) {
-    
-      responseData.redirectUrl = `/home/${user._id}/${workspace._id}`;
+      responseData.redirectUrl = `/home/${user._id}/${workspaceId}`;
     }
 
     return res.status(200).json(responseData);
@@ -232,6 +239,7 @@ const Login = async (req, res) => {
     });
   }
 };
+
 
 const googlelogin = async (req, res) => {
   console.log("hii");
